@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express"
 
-const asyncHandler = (fn: any) => (req: Request, res: Response, next: NextFunction) => {
+const asyncHandler = (fn: any) => async (req: Request, res: Response, next: NextFunction) => {
     try {
-        return fn(req, res, next)
+        return await fn(req, res, next)
     } catch (error) {
         next(error)
     }

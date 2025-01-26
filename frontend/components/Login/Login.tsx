@@ -7,7 +7,8 @@ export default function Login() {
     const [showLogin, setShowLogin] = React.useState(false)
 
     const onLoginSuccess = () => {
-        setShowLogin(false)
+        //@ts-ignore
+        document.getElementById("login")?.close()
     }
 
     const onSignUpSucess = () => {

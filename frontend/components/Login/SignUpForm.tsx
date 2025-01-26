@@ -36,6 +36,7 @@ const SignUpForm = ({ onSignUpSucess }: { onSignUpSucess: () => void }) => {
         // Validation failed 
         if (!(signUpData.username && signUpData.email && signUpData.password)) return setFormStatus({ status: "error", message: "Fill all the fields" })
 
+        // Sign up    
         const { data, error } = await signUpUser(signUpData)
 
         if (error) return setFormStatus({ status: "error", message: error?.response?.data?.message || error.message || "Error signing up" })

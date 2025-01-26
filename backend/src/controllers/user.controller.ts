@@ -10,13 +10,12 @@ import crypto from 'crypto';
 import { EmailVerification } from "../models/EmailVerfication.model";
 
 
-function generateUniqueToken(randomString: string) {
+function generateUniqueToken(name: string) {
     // Create a hash of the random string using SHA-256
-    const hash = crypto.createHash('sha256').update(randomString).digest('hex');
+    const hash = crypto.createHash('sha256').update(name).digest('hex');
 
-    // Combine the hash with a timestamp (for uniqueness)
-    const timestamp = Date.now().toString();
-    const uniqueToken = `${hash}-${timestamp}`;
+    // Take the first 16 characters of the hash and append the current timestamp for uniqueness
+    const uniqueToken = hash.substring(0, 16) + Date.now().toString();
 
     return uniqueToken;
 }
@@ -30,8 +29,8 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     // If the user data is not valid
     if (!result.success) throw new ApiError(400, result.error.issues[0].message);
 
-    // check if the user exists
-    const user = await User.findOne({ email: result.data.email })
+    // check if the user exists with either email or username
+    const user = await User.findOne({ $or: [{ email: result.data.username }, { username: result.data.username }] })
 
     // if user does not exist
     if (!user) throw new ApiError(400, "User does not exist");
@@ -39,8 +38,10 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     // if user is not activated
     if (!user.isEmailVerified) throw new ApiError(400, "User not activated there account");
 
+    // If the password is not correct
+    if (!await user.comparePassword(result.data.password)) throw new ApiError(400, "Invalid Password");
 
-    res.status(200).json(new ApiResponse(200, "User Logged In"));
+    res.status(200).json(new ApiResponse(200, "Login Successfull"));
 
 })
 
@@ -67,18 +68,24 @@ export const signUpUser = asyncHandler(async (req: Request, res: Response) => {
     if (user) throw new ApiError(400, "User already exists with either email or username");
 
     // create the user if it doesn't exist
-    const newUser = await User.create(result.data);
+    const newUser = new User(result.data);
+
+    // hash the password
+    await newUser.hashPassword()
+
+    // save the user
+    await newUser.save();
 
     //generating a unique token
     const token = generateUniqueToken(result.data.email);
 
     // create the email verification document
-    const emailVerification = await EmailVerification.create({
+    await EmailVerification.create({
         email: result.data.email,
         token: token
     })
 
-    // send the mail to the email to the user
+    // Mail Options
     const mailOptions: MailOptions = {
         from: `Task Manager <${process.env.MAIL_ADDRESS}>`,
         to: result.data.email,
@@ -89,10 +96,10 @@ export const signUpUser = asyncHandler(async (req: Request, res: Response) => {
         `
     };
 
-    mailService.sendMail(mailOptions)
+    // Send the mail
+    //  mailService.sendMail(mailOptions)
 
     res.status(201).json(new ApiResponse(201, "Please check your email to verify your account"));
-
 })
 
 
@@ -107,6 +114,7 @@ export const activateUser = asyncHandler(async (req: Request, res: Response) => 
     // if the email verification document does not exist
     if (!emailVerification) throw new ApiError(400, "User does not exist");
 
+    // if the token is not valid
     if (emailVerification.token !== token) throw new ApiError(400, "Invalid token");
 
     // update the isEmailVerified field to true

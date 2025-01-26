@@ -1,7 +1,16 @@
 import mongoose from "mongoose";
+import * as argon2d from "argon2";
 
-const userSchema = new mongoose.Schema({
+interface UserDocument extends mongoose.Document {
+    username: string;
+    email: string;
+    password: string;
+    isEmailVerified: boolean;
+    hashPassword(): Promise<void>;
+    comparePassword(password: string): Promise<boolean>;
+}
 
+const userSchema: mongoose.Schema<UserDocument> = new mongoose.Schema({
     username: {
         type: String,
         required: true,
@@ -27,4 +36,13 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-export const User = mongoose.model("User", userSchema);
+userSchema.methods.hashPassword = async function () {
+    this.password = await argon2d.hash(this.password);
+};
+
+userSchema.methods.comparePassword = async function (password: string) {
+    return await argon2d.verify(this.password, password);
+};
+
+
+export const User = mongoose.model<UserDocument>("User", userSchema);

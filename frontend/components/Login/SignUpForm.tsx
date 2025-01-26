@@ -10,17 +10,18 @@ const SignUpForm = ({ onSignUpSucess }: { onSignUpSucess: () => void }) => {
         password: ""
     })
 
+    const cleanUp = () => {
+        setFormStatus({ status: "", message: "" })
+        setSignUpData({ username: "", email: "", password: "" })
+    }
+
     const [formStatus, setFormStatus] = React.useState({
         status: "",
         message: ""
     })
 
     React.useEffect(() => {
-        // clean up
-        return () => {
-            setFormStatus({ status: "", message: "" })
-            setSignUpData({ username: "", email: "", password: "" })
-        }
+        return () => cleanUp()
     }, [])
 
     const handleFormData = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,6 +45,7 @@ const SignUpForm = ({ onSignUpSucess }: { onSignUpSucess: () => void }) => {
         setFormStatus({ status: "success", message: data.message })
 
         setTimeout(() => {
+            cleanUp()
             onSignUpSucess()
         }, 1000)
     }

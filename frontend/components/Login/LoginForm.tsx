@@ -13,12 +13,13 @@ export default function LoginForm({ onLoginSuccess }: { onLoginSuccess: () => vo
         message: ""
     })
 
+    const cleanUp = () => {
+        setFormStatus({ status: "", message: "" })
+        setLoginData({ username: "", password: "" })
+    }
+
     React.useEffect(() => {
-        // clean up
-        return () => {
-            setFormStatus({ status: "", message: "" })
-            setLoginData({ username: "", password: "" })
-        }
+        return () => cleanUp()
     }, [])
 
     const handleLoginData = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +46,7 @@ export default function LoginForm({ onLoginSuccess }: { onLoginSuccess: () => vo
         setFormStatus({ status: "success", message: data.message })
 
         setTimeout(() => {
+            cleanUp()
             onLoginSuccess()
         }, 1000)
     }

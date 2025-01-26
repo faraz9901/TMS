@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react'
-import Login from './Login'
+import Login from './Login/Login'
 import { HamburgerIcon } from './icons'
 
 export default function Navbar() {

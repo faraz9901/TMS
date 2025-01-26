@@ -83,8 +83,9 @@ export const signUpUser = asyncHandler(async (req: Request, res: Response) => {
         from: `Task Manager <${process.env.MAIL_ADDRESS}>`,
         to: result.data.email,
         subject: 'Activate your account',
-        html: `       
-        <a href='${process.env.SERVER_URL}/api/v1/user/activate-user/${result.data.email}/${token}'> Activate your account</a>      
+        html: ` 
+        <h1>Activate your account</h1>      
+        <a href='${process.env.SERVER_URL}/api/v1/user/activate-user/${result.data.email}/${token}'> Tap here to activate your account</a>      
         `
     };
 

@@ -17,10 +17,14 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+    },
+
+    isEmailVerified: {
+        type: Boolean,
+        default: false
     }
 
+}, { timestamps: true });
 
-
-});
 
 export const User = mongoose.model("User", userSchema);

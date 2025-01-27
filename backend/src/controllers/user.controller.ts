@@ -9,6 +9,7 @@ import { mailService } from "../utils/mailService";
 import crypto from 'crypto';
 import { EmailVerification } from "../models/EmailVerfication.model";
 import { signJwtToken } from "../utils/jwtService";
+import ejs from "ejs";
 
 
 function generateUniqueToken(name: string) {
@@ -92,15 +93,21 @@ export const signUpUser = asyncHandler(async (req: Request, res: Response) => {
     // create the email verification document if it doesn't exist
     await EmailVerification.findOneAndUpdate({ email: result.data.email }, { email: result.data.email, token: token }, { upsert: true })
 
+    const data = {
+        name: newUser.username,
+        link: `${process.env.SERVER_URL}/api/v1/user/activate-user/${newUser.email}/${token}`
+    }
+
+    // Render the template 
+    // ejs always looks from the root directory
+    const html = await ejs.renderFile('./src/templates/activate-account.ejs', data)
+
     // Mail Options
     const mailOptions: MailOptions = {
         from: `T M S <${process.env.MAIL_ADDRESS}>`,
         to: result.data.email,
         subject: 'Activate your account',
-        html: ` 
-        <h1>Activate your account</h1>      
-        <a href='${process.env.SERVER_URL}/api/v1/user/activate-user/${result.data.email}/${token}'> Tap here to activate your account</a>      
-        `
+        html: html
     };
 
     // Send the mail
@@ -159,20 +166,24 @@ export const requestEmailVerification = asyncHandler(async (req: Request, res: R
     // create the email verification document if it doesn't exist
     await EmailVerification.findOneAndUpdate({ email }, { email: email, token: token }, { upsert: true })
 
+    const data = {
+        name: user.username,
+        link: `${process.env.SERVER_URL}/api/v1/user/activate-user/${email}/${token}`
+    }
+
+    // Render the template
+    const html = await ejs.renderFile('./src/templates/activate-account.ejs', data)
 
     // Mail Options
     const mailOptions: MailOptions = {
-        from: `T M S <${process.env.MAIL_ADDRESS}>`,
+        from: `T M S<${process.env.MAIL_ADDRESS}>`,
         to: email,
         subject: 'Activate your account',
-        html: ` 
-        <h1>Activate your account</h1>      
-        <a href='${process.env.SERVER_URL}/api/v1/user/activate-user/${email}/${token}'> Tap here to activate your account</a>      
-        `
+        html: html // Send the email with the HTML content
     };
 
     // Send the mail    
-    mailService.sendMail(mailOptions)
+    //mailService.sendMail(mailOptions)
 
     res.status(200).json(new ApiResponse(200, "Please check your email to verify your account"));
 })

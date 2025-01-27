@@ -27,7 +27,7 @@ export default function page() {
     return (
         <form onSubmit={onFormSubmit} className='flex flex-col gap-4'>
             <h3 className='text-center text-xl font-semibold'>Activate your account</h3>
-            <Input required disabled={formStatus === "loading"} type="email" placeholder="Type your email" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} />
+            <Input name="email" required disabled={formStatus === "loading"} type="email" placeholder="Type your email" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} />
             {formStatus === "loading" && <span className="loading loading-dots loading-md" > </span>}
             <button type="submit" disabled={formStatus === "loading"} className="btn btn-neutral w-full">Send Mail</button>
         </form>

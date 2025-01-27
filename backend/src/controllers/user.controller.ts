@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import { CookieOptions, Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler";
 import ApiError from "../utils/ApiError";
-import { emailVerificationDto, loginDto, signUpDto } from "../dto/user.dto";
+import { activateUserDto, emailVerificationDto, loginDto, signUpDto } from "../dto/user.dto";
 import ApiResponse from "../utils/ApiResponse";
 import { User } from "../models/User.model";
 import { MailOptions } from "nodemailer/lib/sendmail-transport";
@@ -10,6 +10,12 @@ import crypto from 'crypto';
 import { EmailVerification } from "../models/EmailVerfication.model";
 import { signJwtToken } from "../utils/jwtService";
 import ejs from "ejs";
+
+const cookieOptions: CookieOptions = {
+    sameSite: "strict",
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+}
 
 
 function generateUniqueToken(name: string) {
@@ -49,11 +55,9 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     })
 
     // Add cookie to the response
-    res.
-        status(200)
-        .cookie("accessToken", accessToken, { sameSite: "strict", httpOnly: true })
+    res.status(200)
+        .cookie("accessToken", accessToken, cookieOptions)
         .json(new ApiResponse(200, "Login Successfull"));
-
 })
 
 
@@ -122,6 +126,12 @@ export const activateUser = asyncHandler(async (req: Request, res: Response) => 
     const email = req.params.email;
     const token = req.params.token;
 
+    // Validating the user data
+    const result = activateUserDto.safeParse({ email, token });
+
+    // If the user data is not valid
+    if (!result.success) throw new ApiError(400, result.error.issues[0].message);
+
     // find the email verification document
     const emailVerification = await EmailVerification.findOne({ email: email })
 
@@ -188,4 +198,11 @@ export const requestEmailVerification = asyncHandler(async (req: Request, res: R
     res.status(200).json(new ApiResponse(200, "Please check your email to verify your account"));
 })
 
+
+export const logoutUser = asyncHandler(async (req: Request, res: Response) => {
+    return res
+        .clearCookie("accessToken", cookieOptions)
+        .status(200)
+        .json(new ApiResponse(200, "User logged out successfully"));
+})
 

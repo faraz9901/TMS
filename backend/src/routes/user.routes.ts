@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { activateUser, loginUser, requestEmailVerification, signUpUser } from "../controllers/user.controller";
+import { activateUser, loginUser, logoutUser, requestEmailVerification, signUpUser } from "../controllers/user.controller";
 
 const router = Router();
 
@@ -10,6 +10,8 @@ router.post("/signup", signUpUser)
 router.get("/activate-user/:email/:token", activateUser)
 
 router.post("/request-mail", requestEmailVerification)
+
+router.post("/logout", logoutUser)
 
 
 export default router

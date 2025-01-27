@@ -18,4 +18,9 @@ const emailVerificationDto = z.object({
 })
 
 
-export { loginDto, signUpDto, emailVerificationDto }
+const activateUserDto = z.object({
+    email: z.string({ required_error: "Email is required" }).email({ message: "Invalid email" }),
+    token: z.string({ required_error: "Token is required" }),
+})
+
+export { loginDto, signUpDto, emailVerificationDto, activateUserDto }

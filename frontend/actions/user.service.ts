@@ -18,6 +18,14 @@ const loginUser = async (data: { username: string, password: string }): Promise<
     }
 }
 
+const requestEmail = async (email: string): Promise<{ data: any, error: any }> => {
+    try {
+        const res = await request.post("/user/request-mail", { email })
+        return { data: res.data, error: null }
+    } catch (error) {
+        console.log(error)
+        return { data: null, error }
+    }
+}
 
-
-export { signUpUser, loginUser }
+export { signUpUser, loginUser, requestEmail }

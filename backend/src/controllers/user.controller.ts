@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler";
 import ApiError from "../utils/ApiError";
-import { loginDto, signUpDto } from "../dto/user.dto";
+import { emailVerificationDto, loginDto, signUpDto } from "../dto/user.dto";
 import ApiResponse from "../utils/ApiResponse";
 import { User } from "../models/User.model";
 import { MailOptions } from "nodemailer/lib/sendmail-transport";
 import { mailService } from "../utils/mailService";
 import crypto from 'crypto';
 import { EmailVerification } from "../models/EmailVerfication.model";
+import { signJwtToken } from "../utils/jwtService";
 
 
 function generateUniqueToken(name: string) {
@@ -41,10 +42,15 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     // If the password is not correct
     if (!await user.comparePassword(result.data.password)) throw new ApiError(400, "Invalid Password");
 
+    // create a access token
+    const accessToken = signJwtToken({
+        _id: user._id,
+    })
+
     // Add cookie to the response
     res.
         status(200)
-        .cookie("accessToken", "123", { httpOnly: true })
+        .cookie("accessToken", accessToken, { sameSite: "strict", httpOnly: true })
         .json(new ApiResponse(200, "Login Successfull"));
 
 })
@@ -83,15 +89,12 @@ export const signUpUser = asyncHandler(async (req: Request, res: Response) => {
     //generating a unique token
     const token = generateUniqueToken(result.data.email);
 
-    // create the email verification document
-    await EmailVerification.create({
-        email: result.data.email,
-        token: token
-    })
+    // create the email verification document if it doesn't exist
+    await EmailVerification.findOneAndUpdate({ email: result.data.email }, { email: result.data.email, token: token }, { upsert: true })
 
     // Mail Options
     const mailOptions: MailOptions = {
-        from: `Task Manager <${process.env.MAIL_ADDRESS}>`,
+        from: `T M S <${process.env.MAIL_ADDRESS}>`,
         to: result.data.email,
         subject: 'Activate your account',
         html: ` 
@@ -134,12 +137,18 @@ export const activateUser = asyncHandler(async (req: Request, res: Response) => 
 
 export const requestEmailVerification = asyncHandler(async (req: Request, res: Response) => {
 
-    const email = req.params.email
+    // Validating the user data
+    const result = emailVerificationDto.safeParse(req.body);
+
+    // If the user data is not valid
+    if (!result.success) throw new ApiError(400, result.error.issues[0].message);
+
+    const email = result.data.email
 
     // find the user
     const user = await User.findOne({ email })
 
-    if (!user) throw new ApiError(400, "User does not exist");
+    if (!user) throw new ApiError(400, "User does not exist ! Please sign up");
 
     // if the user is already activated
     if (user.isEmailVerified) throw new ApiError(400, "User already activated");
@@ -147,15 +156,13 @@ export const requestEmailVerification = asyncHandler(async (req: Request, res: R
     //generating a unique token
     const token = generateUniqueToken(email);
 
-    // create the email verification document
-    await EmailVerification.create({
-        email: email,
-        token: token
-    })
+    // create the email verification document if it doesn't exist
+    await EmailVerification.findOneAndUpdate({ email }, { email: email, token: token }, { upsert: true })
+
 
     // Mail Options
     const mailOptions: MailOptions = {
-        from: `Task Manager <${process.env.MAIL_ADDRESS}>`,
+        from: `T M S <${process.env.MAIL_ADDRESS}>`,
         to: email,
         subject: 'Activate your account',
         html: ` 
@@ -165,7 +172,7 @@ export const requestEmailVerification = asyncHandler(async (req: Request, res: R
     };
 
     // Send the mail    
-    // mailService.sendMail(mailOptions)
+    mailService.sendMail(mailOptions)
 
     res.status(200).json(new ApiResponse(200, "Please check your email to verify your account"));
 })

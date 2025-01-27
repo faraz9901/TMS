@@ -1,10 +1,13 @@
+"use client"
 import React from "react"
-import { Input } from "./SignUpForm"
+import { useRouter } from "next/navigation"
+
 import { loginUser } from "@/actions/user.service"
 import { showErrorToast, showSuccessToast } from "@/utils"
+import Input from "@/components/Input"
 
-
-export default function LoginForm({ onLoginSuccess }: { onLoginSuccess: () => void }) {
+export default function Login() {
+    const router = useRouter()
     const [loginData, setLoginData] = React.useState({
         username: "",
         password: ""
@@ -12,14 +15,10 @@ export default function LoginForm({ onLoginSuccess }: { onLoginSuccess: () => vo
 
     const [formStatus, setFormStatus] = React.useState("")
 
-    const cleanUp = () => {
-        setFormStatus("")
-        setLoginData({ username: "", password: "" })
+    const onSignUpClick = () => {
+        router.push("/signup")
     }
 
-    React.useEffect(() => {
-        return () => cleanUp()
-    }, [])
 
     const handleLoginData = (e: React.ChangeEvent<HTMLInputElement>) => {
         const name = e.target.name
@@ -49,7 +48,7 @@ export default function LoginForm({ onLoginSuccess }: { onLoginSuccess: () => vo
         showSuccessToast("Login successful")
 
         setTimeout(() => {
-            onLoginSuccess()
+            router.push("/home")
         }, 1000)
     }
 
@@ -63,11 +62,14 @@ export default function LoginForm({ onLoginSuccess }: { onLoginSuccess: () => vo
 
             {formStatus === "loading" && <span className="loading loading-dots loading-md" > </span>}
 
-            {formStatus === "activateAccount" && <button onClick={() => cleanUp()} type="button" className="btn btn-primary w-full">Activate Account</button>}
+            {/* only show this button when user is not activated */}
+            {formStatus === "activateAccount" && <button onClick={() => router.push("/activate-account")} type="button" className="btn btn-primary w-full">Activate Account</button>}
 
             <button disabled={formStatus === "loading"} className="btn btn-neutral w-full">
                 Login
             </button>
+
+            <button type="button" disabled={formStatus === "loading"} onClick={onSignUpClick} className="btn  w-full" > Sign Up </button>
         </form>
     )
 }

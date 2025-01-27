@@ -19,10 +19,10 @@ app.use("/api/v1/user", userRoutes)
 
 // Error handler
 app.use((err: ApiError, _req: Request, res: Response, _next: NextFunction) => {
-    res.status(err.statusCode).json({
-        statusCode: err.statusCode,
-        success: err.success,
-        message: err.message
+    res.status(err.statusCode || 500).json({
+        statusCode: err.statusCode || 500,
+        success: false,
+        message: err.message || "Something went wrong",
     });
 });
 

@@ -1,11 +1,14 @@
+"use client"
+
 import React from "react"
 import { signUpUser } from "@/actions/user.service"
 import { showErrorToast, showSuccessToast } from "@/utils"
-import Input from "../Input"
+import Input from "@/components/Input"
+import { useRouter } from "next/navigation"
 
 
-
-const SignUpForm = ({ onSignUpSucess }: { onSignUpSucess: () => void }) => {
+const SignUp = () => {
+    const router = useRouter()
     const [signUpData, setSignUpData] = React.useState({
         username: "",
         email: "",
@@ -13,15 +16,9 @@ const SignUpForm = ({ onSignUpSucess }: { onSignUpSucess: () => void }) => {
     })
     const [formStatus, setFormStatus] = React.useState("")
 
-    const cleanUp = () => {
-        setFormStatus("")
-        setSignUpData({ username: "", email: "", password: "" })
+    const onLoginClick = () => {
+        router.push("/login")
     }
-
-
-    React.useEffect(() => {
-        return () => cleanUp()
-    }, [])
 
     const handleFormData = (e: React.ChangeEvent<HTMLInputElement>) => {
         const name = e.target.name
@@ -51,8 +48,7 @@ const SignUpForm = ({ onSignUpSucess }: { onSignUpSucess: () => void }) => {
         setFormStatus("")
 
         setTimeout(() => {
-            cleanUp()
-            onSignUpSucess()
+            router.push("/login")
         }, 1000)
     }
 
@@ -70,9 +66,10 @@ const SignUpForm = ({ onSignUpSucess }: { onSignUpSucess: () => void }) => {
 
             <button disabled={formStatus === "loading"} className="btn  w-full" > Sign Up </button>
 
+            <button type="button" disabled={formStatus === "loading"} onClick={onLoginClick} className="btn btn-neutral w-full" > Login </button>
         </form>
     )
 }
 
 
-export default SignUpForm
+export default SignUp

@@ -1,15 +1,8 @@
 "use client"
-
 import React from 'react'
-import Login from './Login/Login'
 import { HamburgerIcon } from './icons'
 
 export default function Navbar() {
-
-    const showLoginModal = () => {
-        //@ts-ignore
-        document.getElementById("login")?.showModal()
-    }
 
     return (
         <>
@@ -45,20 +38,11 @@ export default function Navbar() {
                     </div>
                 </div>
 
-                {/* Login Button */}
-                <button
-                    onClick={showLoginModal}
-                    className="btn  btn-primary"
-                >
-                    Login
-                </button>
-
                 {/* Button to open the sidebar in mobile view */}
                 <label htmlFor="my-drawer-2" className="lg:hidden">
                     <HamburgerIcon />
                 </label>
             </div>
-            <Login />
         </>
     )
 }

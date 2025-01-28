@@ -1,18 +1,16 @@
 "use client"
 import React from 'react'
 import { AlignJustify, Search } from 'lucide-react'
-import Input from './Input'
 
 export default function Navbar() {
-
-    const user = JSON.parse(localStorage.getItem("user")!)
+    const user = JSON.parse(localStorage.getItem("user") || "")
 
     return (
         <>
             <div className="navbar shadow-md bg-gradient-to-b from-slate-50 to-slate-100 w-full justify-between">
 
                 <h1>
-                    Hello {user.username || ""},
+                    Hello {user?.username || ""},
                 </h1>
 
 

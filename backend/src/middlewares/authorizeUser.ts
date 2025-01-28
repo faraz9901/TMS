@@ -8,6 +8,8 @@ import { decodeJwtToken } from "../utils/jwtService";
 
 export const authorizeUser = asyncHandler(async (req: RequestWithUser, res: Response, next: NextFunction) => {
 
+    console.log(req.url, "in auth")
+
     const accessToken = req.cookies?.accessToken;
 
     if (!accessToken) {

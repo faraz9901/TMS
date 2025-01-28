@@ -1,9 +1,9 @@
 import { request } from "@/utils"
 
 
-const getCollections = async (limit: number | null = null) => {
+const getProjects = async () => {
     try {
-        const res = await request.get("/projects/collections", { params: { limit } })
+        const res = await request.get("/projects")
         return { data: res.data, error: null }
     } catch (error) {
         return { data: null, error }
@@ -21,4 +21,4 @@ const createProject = async (data: { collection_name: string, project_name: stri
 
 
 
-export { getCollections, createProject }
+export { getProjects, createProject }

@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import Sidebar from "@/components/Sidebar";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,13 +14,16 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             <div className="drawer-content">
                 {/* Main Page Content Here */}
                 <Navbar />
-                {children}
+                <main className="bg-gradient-to-b min-h-screen from-slate-50 to-slate-100">
+                    {children}
+                </main>
             </div>
 
             <div className="drawer-side">
                 <label htmlFor="sidebar" aria-label="close sidebar" className="drawer-overlay"></label>
-                <ul className="menu  bg-gray-900 text-base-content min-h-full lg:w-80 p-4">
+                <ul className="menu  bg-gradient-to-b from-slate-100 to-slate-300  min-h-full lg:w-80 p-4">
                     {/* Sidebar content here */}
+                    <Sidebar />
                 </ul>
             </div>
         </div>

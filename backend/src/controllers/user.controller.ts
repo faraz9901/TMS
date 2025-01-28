@@ -54,10 +54,17 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
         _id: user._id,
     })
 
+    const userData = {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        isEmailVerified: user.isEmailVerified,
+    }
+
     // Add cookie to the response
     res.status(200)
         .cookie("accessToken", accessToken, cookieOptions)
-        .json(new ApiResponse(200, "Login Successfull"));
+        .json(new ApiResponse(200, "Login Successfull", userData));
 })
 
 

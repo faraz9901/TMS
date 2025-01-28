@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="text-gray-700">
         {children}
         <ToastContainer
           position="bottom-right"

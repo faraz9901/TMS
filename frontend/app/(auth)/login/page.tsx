@@ -34,7 +34,7 @@ export default function Login() {
         setFormStatus("loading")
 
         // Login 
-        const { error } = await loginUser(loginData)
+        const { data, error } = await loginUser(loginData)
 
         if (error) {
             showErrorToast(error)
@@ -45,11 +45,10 @@ export default function Login() {
             return setFormStatus("")
         }
 
-        showSuccessToast("Login successful")
+        localStorage.setItem("user", JSON.stringify(data.content))
 
-        setTimeout(() => {
-            router.push("/home")
-        }, 1000)
+        router.push("/home")
+        showSuccessToast("Login successful")
     }
 
     return (

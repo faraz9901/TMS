@@ -6,6 +6,7 @@ interface ProjectDocument extends mongoose.Document {
     owner: mongoose.Schema.Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
+    description: string;
     tasks: mongoose.Schema.Types.ObjectId[];
 }
 
@@ -23,10 +24,13 @@ const projectSchema: mongoose.Schema<ProjectDocument> = new mongoose.Schema({
         ref: "User",
         required: true
     },
+    description: {
+        type: String,
+        required: true
+    },
     tasks: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Task",
-        required: true
     }]
 }, { timestamps: true });
 

@@ -1,11 +1,13 @@
 import { Plus, Users } from 'lucide-react'
+import Link from 'next/link'
+import path from 'path'
 import React from 'react'
 
-const NavItem = ({ children }: { children: React.ReactNode }) => {
+const NavItem = ({ href, children }: { href: string, children: React.ReactNode }) => {
     return (
-        <div className='flex items-center gap-5 cursor-pointer'>
+        <Link href={href} className='flex items-center gap-5 cursor-pointer'>
             {children}
-        </div>
+        </Link>
     )
 }
 
@@ -18,21 +20,14 @@ export default function Sidebar() {
                 <Users />  TMS
             </h2>
 
-            <NavItem>
+            <NavItem href='/home/create-project'>
                 <button className=''>
                     <Plus size={20} />
                 </button>
                 <span>
-                    Create new collection
+                    Create new project
                 </span>
             </NavItem>
-
-
-
-
-
-
-
         </div>
     )
 }

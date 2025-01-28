@@ -14,7 +14,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             <div className="drawer-content">
                 {/* Main Page Content Here */}
                 <Navbar />
-                <main className="bg-gradient-to-b min-h-screen from-slate-50 to-slate-100">
+                <main className=" min-h-[88vh] bg-gradient-to-b  from-slate-50 to-slate-100">
                     {children}
                 </main>
             </div>

@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/user.routes";
+import projectRoutes from "./routes/project.routes";
 import ApiError from "./utils/ApiError";
 
 const app = express();
@@ -14,7 +15,10 @@ app.use(cors({
 }))
 
 app.use(cookieParser())
+
 app.use("/api/v1/user", userRoutes)
+
+app.use("/api/v1/projects", projectRoutes)
 
 
 // Error handler

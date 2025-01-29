@@ -32,13 +32,14 @@ export const createProject = asyncHandler(async (req: RequestWithUser, res: Resp
 })
 
 
-export const getProjects = asyncHandler(async (req: RequestWithUser, res: Response) => {
+export const getUserOwnedProjects = asyncHandler(async (req: RequestWithUser, res: Response) => {
 
     //getting all the projects of the user and grouping them based on the collections
     const collections = await Project.aggregate([
         { $match: { owner: stringToObjectId(req.user._id) } },
         { $group: { _id: "$collection_name", projects: { $push: "$$ROOT" } } },
-        { $project: { _id: 0, name: "$_id", projects: 1 } }
+        { $project: { _id: 0, name: "$_id", projects: 1 } },
+        { $sort: { name: 1 } } // sorting the collections in alphabetical order
     ]);
 
     return res.status(200).json(new ApiResponse(200, "Projects fetched successfully", collections))
@@ -49,6 +50,11 @@ export const deleteProject = asyncHandler(async (req: RequestWithUser, res: Resp
 
     const { id: projectId } = req.params
     const { _id: userId } = req.user
+
+    //checking if the project exists
+    const project = await Project.findOne({ _id: stringToObjectId(projectId), owner: stringToObjectId(userId) })
+
+    if (!project) throw new ApiError(404, "Project not found")
 
     //deleting the project with the given id and owner
     await Project.findOneAndDelete({ _id: stringToObjectId(projectId), owner: stringToObjectId(userId) })
@@ -84,8 +90,10 @@ export const getProject = asyncHandler(async (req: RequestWithUser, res: Respons
     const { id: projectId } = req.params
     const { _id: userId } = req.user
 
-    //getting the project with the given id and owner
-    const project = await Project.findOne({ _id: stringToObjectId(projectId), owner: stringToObjectId(userId) })
+    //getting the project with the given id 
+    const project = await Project.findOne({ _id: stringToObjectId(projectId) })
+
+    if (!project) throw new ApiError(404, "Project not found")
 
     return res.status(200).json(new ApiResponse(200, "Project fetched successfully", project))
 })

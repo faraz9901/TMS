@@ -19,6 +19,15 @@ const createProject = async (data: { collection_name: string, project_name: stri
     }
 }
 
+const deleteProject = async (id: string): Promise<{ data: any, error: any }> => {
+    try {
+        const res = await request.delete(`/projects/${id}`)
+        return { data: res.data, error: null }
+    } catch (error) {
+        return { data: null, error }
+    }
+}
 
 
-export { getProjects, createProject }
+
+export { getProjects, createProject, deleteProject }

@@ -1,19 +1,33 @@
 import { Project as ProjectType } from '@/types'
 import { Trash } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
-const Project = ({ project }: { project: ProjectType }) => (
-    <Link href={`/home/projects/${project._id}`} className='bg-white p-4 rounded-md shadow-md flex flex-col gap-4'>
-        <h3 className='text-lg font-bold'>{project.project_name}</h3>
-        <p className='text-sm text-gray-500'>{project.description}</p>
+const Project = ({ project }: { project: ProjectType }) => {
+    const user_id = JSON.parse(localStorage.getItem("user") || "")._id
+    const router = useRouter()
 
-        <div className='flex gap-2 justify-end'>
-            <button className=' btn-outline btn btn-sm btn-error' ><Trash size={15} /></button>
-        </div>
-    </Link>
-)
+    const onDelete = async (e: React.MouseEvent) => {
+        e.preventDefault()
+        window.history.replaceState({}, '', `?delete=${project._id}`); // adding the project id to the url 
+        const dialog = document.getElementById("confirm-dialog") as HTMLDialogElement
+        dialog?.showModal()
+    }
 
+    return (
+        <Link href={`/home/projects/${project._id}`} className='bg-white p-4   hover:scale-105 duration-300 active:scale-100 rounded-md shadow-md flex flex-col gap-4'>
+            <h3 className='text-lg font-bold'>{project.project_name}</h3>
+            <p className='text-sm text-gray-500'>{project.description}</p>
+
+            {project.owner === user_id && // showing the delete button if the project is created by the user
+                <div className='flex gap-2 justify-end'>
+                    <button onClick={onDelete} className=' btn-outline btn btn-sm btn-error' ><Trash size={15} /></button>
+                </div>
+            }
+        </Link>
+    )
+}
 
 
 export default function Collection({ name, projects }: { name: string, projects: ProjectType[] }) {

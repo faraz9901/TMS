@@ -1,9 +1,11 @@
 "use client"
-import { getProjects } from '@/actions/projects.service'
+import { deleteProject, getProjects } from '@/actions/projects.service'
 import Collection from '@/components/Collection'
+import ConfirmDialog from '@/components/ConfirmDialog'
 import Loader from '@/components/Loader'
 import { Project } from '@/types'
-import { showErrorToast } from '@/utils'
+import { showErrorToast, showSuccessToast } from '@/utils'
+import { useRouter, useSearchParams } from 'next/navigation'
 import React from 'react'
 
 interface CollectionType {
@@ -14,27 +16,51 @@ interface CollectionType {
 export default function Collections() {
     const [collections, setCollections] = React.useState([])
     const [loading, setLoading] = React.useState("")
+    const searchParams = useSearchParams()
+    const router = useRouter()
+
+    const handleDeleteProject = async () => {
+
+        const projectId: string = searchParams.get("delete") || ""
+
+        if (!projectId) return
+
+        const dialog = document.getElementById("confirm-dialog") as HTMLDialogElement || null
+
+        dialog?.close()
+
+        const { error } = await deleteProject(projectId)
+
+        if (error) return showErrorToast(error)
+
+        showSuccessToast("Project deleted successfully")
+
+        removeQueryFromUrl()
+
+        getCollections() // refreshing the collections
+    }
+
+    const removeQueryFromUrl = () => {
+        const newURL = window.location.pathname; // Just the path, no query
+        window.history.replaceState(null, '', newURL)   //reseting the url
+    }
+
+    const getCollections = async () => {
+        setLoading("loading")
+        const { data, error } = await getProjects()
+
+        if (data) {
+            setCollections(data.content)
+        }
+
+        if (error) {
+            showErrorToast(error)
+        }
+        setLoading("")
+    }
 
 
     React.useEffect(() => {
-        const getCollections = async () => {
-
-            setLoading("loading")
-
-            const { data, error } = await getProjects()
-
-
-            if (data) {
-                setCollections(data.content)
-            }
-
-            if (error) {
-                showErrorToast(error)
-            }
-
-            setTimeout(() => setLoading(""), 1000)
-        }
-
         getCollections()
     }, [])
 
@@ -54,14 +80,13 @@ export default function Collections() {
 
             {collections?.map((collection: CollectionType) => <Collection key={collection.name} name={collection.name} projects={collection.projects} />)}
 
-
-
-
-
-
-
-
-
+            <ConfirmDialog
+                confirmMessage='Are you sure you want to delete this project'
+                confirmText='Delete'
+                confirmBtnClassName='btn text-white btn-sm btn-error'
+                onConfirm={handleDeleteProject}
+                onClose={removeQueryFromUrl}
+            />
         </div>
     )
 }

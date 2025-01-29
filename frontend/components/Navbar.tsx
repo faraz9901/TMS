@@ -3,7 +3,7 @@ import React from 'react'
 import { AlignJustify, Search } from 'lucide-react'
 
 export default function Navbar() {
-    const user = JSON.parse(localStorage.getItem("user") || "")
+    const user = JSON.parse(localStorage.getItem("user") || "{}")
 
     return (
         <>

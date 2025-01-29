@@ -1,4 +1,4 @@
-import { request } from "@/utils"
+import { request, showErrorToast, showSuccessToast } from "@/utils"
 
 const signUpUser = async (data: { username: string, email: string, password: string }): Promise<{ data: any, error: any }> => {
     try {
@@ -28,4 +28,13 @@ const requestEmail = async (email: string): Promise<{ data: any, error: any }> =
     }
 }
 
-export { signUpUser, loginUser, requestEmail }
+const logOutUser = async () => {
+    try {
+        await request.post("/user/logout")
+    } finally {
+        localStorage.removeItem("user")
+        window.location.href = "/"
+    }
+}
+
+export { signUpUser, loginUser, requestEmail, logOutUser }

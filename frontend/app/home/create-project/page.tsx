@@ -50,7 +50,7 @@ export default function CreateProject() {
 
             <h2 className='font-bold text-3xl'>Create a new project</h2>
 
-            <form onSubmit={onFormSubmit} className='grid grid-cols-2 gap-10 w-3/5 items-center'>
+            <form onSubmit={onFormSubmit} className='grid grid-cols-2 gap-10 w-5/6 items-center'>
 
                 <label> Name of the collection </label>
                 <Input type="text" required name="collection_name" disabled={formStatus === "loading"} onChange={handleFormData} value={projectData.collection_name} />
@@ -64,7 +64,7 @@ export default function CreateProject() {
                 <div className='col-span-2 flex justify-end'>
                     <button disabled={formStatus === "loading"} className='btn  btn-neutral'>
                         {formStatus === "loading" && <span className="loading loading-spinner loading-sm"></span>}
-                        Create
+                        {formStatus === "loading" ? "Creating..." : "Create Project"}
                     </button>
                 </div>
 

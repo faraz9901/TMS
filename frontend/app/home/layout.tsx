@@ -1,8 +1,8 @@
-import Loader from "@/components/Loader";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import { Metadata } from "next";
 import { Suspense } from "react";
+import Loading from "./loading";
 
 export const metadata: Metadata = {
     title: "T M S",
@@ -17,7 +17,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 {/* Main Page Content Here */}
                 <Navbar />
                 <main className=" min-h-[88vh] bg-gradient-to-b  from-slate-50 to-slate-100">
-                    <Suspense fallback={<Loader />}>
+                    <Suspense fallback={<Loading />}>
                         {children}
                     </Suspense>
                 </main>

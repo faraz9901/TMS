@@ -58,7 +58,7 @@ export default function EditProject({ project, onEditSuccess }: { project: Proje
             <div className="modal-box flex flex-col gap-5  max-w-5xl">
 
                 <div className='flex justify-between'>
-                    <h3 className="font-bold text-xl">Edit {project.project_name}</h3>
+                    <h3 className="font-bold text-xl">{project.project_name}</h3>
                     <button onClick={onClose} className='btn btn-sm'><X /></button>
                 </div>
 

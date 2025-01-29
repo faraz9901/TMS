@@ -1,5 +1,11 @@
 import { request } from "@/utils"
 
+interface Response {
+    data: any;
+    error: any
+}
+
+
 
 const getProjects = async () => {
     try {
@@ -10,7 +16,7 @@ const getProjects = async () => {
     }
 }
 
-const createProject = async (data: { collection_name: string, project_name: string, description: string }): Promise<{ data: any, error: any }> => {
+const createProject = async (data: { collection_name: string, project_name: string, description: string }): Promise<Response> => {
     try {
         const res = await request.post("/projects", data)
         return { data: res.data, error: null }
@@ -19,7 +25,7 @@ const createProject = async (data: { collection_name: string, project_name: stri
     }
 }
 
-const getProject = async (id: string): Promise<{ data: any, error: any }> => {
+const getProject = async (id: string): Promise<Response> => {
     try {
         const res = await request.get(`/projects/${id}`)
         return { data: res.data, error: null }
@@ -28,7 +34,7 @@ const getProject = async (id: string): Promise<{ data: any, error: any }> => {
     }
 }
 
-const deleteProject = async (id: string): Promise<{ data: any, error: any }> => {
+const deleteProject = async (id: string): Promise<Response> => {
     try {
         const res = await request.delete(`/projects/${id}`)
         return { data: res.data, error: null }
@@ -37,6 +43,14 @@ const deleteProject = async (id: string): Promise<{ data: any, error: any }> => 
     }
 }
 
+const updateProject = async (id: string, data: { collection_name: string, project_name: string, description: string }): Promise<Response> => {
+    try {
+        const res = await request.put(`/projects/${id}`, data)
+        return { data: res.data, error: null }
+    } catch (error) {
+        return { data: null, error }
+    }
+}
 
 
-export { getProjects, createProject, deleteProject, getProject }
+export { getProjects, createProject, deleteProject, getProject, updateProject }

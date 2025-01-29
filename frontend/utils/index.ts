@@ -10,9 +10,11 @@ const request = axios.create({
     withCredentials: true
 })
 
+const getErrorMessage = (error: any) => error?.response?.data?.message || error?.message || "Something went wrong"
 
-const showErrorToast = (error: any) => toast.error(error?.response?.data?.message || error?.message || "Something went wrong")
+
+const showErrorToast = (error: any) => toast.error(getErrorMessage(error))
 
 const showSuccessToast = (message: string) => toast.success(message)
 
-export { request, showErrorToast, showSuccessToast }
+export { request, showErrorToast, showSuccessToast, getErrorMessage }

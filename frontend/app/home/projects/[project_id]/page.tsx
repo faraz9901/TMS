@@ -1,8 +1,9 @@
 "use client"
 import { getProject } from '@/actions/projects.service'
+import EditProject from '@/components/EditProject'
 import { Project } from '@/types'
-import { showErrorToast } from '@/utils'
-import { Plus } from 'lucide-react'
+import { showErrorToast, showSuccessToast } from '@/utils'
+import { Pencil, Plus } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import React from 'react'
 
@@ -10,21 +11,28 @@ export default function ProjectPage() {
     const params = useParams()
     const [project, setProject] = React.useState<Project | null>(null)
 
+    const fetchProject = async () => {
 
+        const { data, error } = await getProject(params.project_id as string)
 
+        if (error) return showErrorToast(error)
+
+        setProject(data.content)
+    }
 
     React.useEffect(() => {
-        const fetchProject = async () => {
-
-            const { data, error } = await getProject(params.project_id as string)
-
-            if (error) return showErrorToast(error)
-
-            setProject(data.content)
-        }
-
         fetchProject()
     }, [])
+
+    const showEditModal = () => {
+        const dialog = document.getElementById("edit-project") as HTMLDialogElement || null
+        dialog?.showModal()
+    }
+
+    const onEditSuccess = () => {
+        showSuccessToast("Project updated successfully")
+        fetchProject() // refreshing the project
+    }
 
 
     if (!project) return (
@@ -36,7 +44,14 @@ export default function ProjectPage() {
 
     return (
         <div className='flex flex-col gap-5 p-5'>
-            <h2 className='text-2xl font-bold'>{project?.project_name}</h2>
+
+            <div className='flex justify-between'>
+                <h2 className='text-2xl font-bold'>{project?.project_name}</h2>
+
+                <div className="tooltip  tooltip-top" data-tip="Edit project">
+                    <button onClick={showEditModal} className="btn btn-sm btn-primary"><Pencil size={20} /></button>
+                </div>
+            </div>
 
             <p>
                 {project?.description}
@@ -46,7 +61,7 @@ export default function ProjectPage() {
                 <h4 className='text-xl font-semibold'>Tasks</h4>
 
                 <div className="tooltip  tooltip-top" data-tip="Add a task">
-                    <button className="btn"><Plus /></button>
+                    <button className="btn btn-sm"><Plus size={20} /></button>
                 </div>
 
             </div>
@@ -59,7 +74,7 @@ export default function ProjectPage() {
                 )}
             </div>
 
-
+            <EditProject project={project} onEditSuccess={onEditSuccess} />
         </div >
     )
 }

@@ -1,10 +1,12 @@
+import Loader from "@/components/Loader";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "T M S",
-    description: "A simple task management system using Next.js",
+    description: "A simple task management system",
 };
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
@@ -15,7 +17,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 {/* Main Page Content Here */}
                 <Navbar />
                 <main className=" min-h-[88vh] bg-gradient-to-b  from-slate-50 to-slate-100">
-                    {children}
+                    <Suspense fallback={<Loader />}>
+                        {children}
+                    </Suspense>
                 </main>
             </div>
 

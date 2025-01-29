@@ -1,14 +1,22 @@
 import { Router } from "express";
 import { authorizeUser } from "../middlewares/authorizeUser";
-import { createProject, getProjects } from "../controllers/project.controller";
+import { createProject, deleteProject, getProject, getProjects, updateProject } from "../controllers/project.controller";
 
 
 const router = Router();
 
 // Post route for creating a project 
 // Get route for getting all the projects
+router.route("/")
+    .all(authorizeUser)
+    .post(createProject)
+    .get(getProjects)
+
 router
-    .post("/", authorizeUser, createProject)
-    .get("/", authorizeUser, getProjects)
+    .route("/:id") // route
+    .all(authorizeUser) // Run this middleware for all the routes
+    .get(getProject)
+    .delete(deleteProject)
+    .put(updateProject)
 
 export default router

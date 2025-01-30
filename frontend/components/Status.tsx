@@ -51,6 +51,7 @@ export function StatusChanger({ projectId, initialStatus, statusOf }: { projectI
 
             if (!error) setStatus(changedStatus) // if there is no error then update the status
         }
+
         setLoading(false)
     }
 

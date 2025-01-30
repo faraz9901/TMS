@@ -2,6 +2,7 @@
 import { getProject } from '@/actions/projects.service'
 import EditProject from '@/components/EditProject'
 import { Status, StatusChanger } from '@/components/Status'
+import CreateTask from '@/components/Task/CreateTask'
 import { Project } from '@/types'
 import { showErrorToast, showSuccessToast } from '@/utils'
 import { Pencil, Plus } from 'lucide-react'
@@ -33,6 +34,11 @@ export default function ProjectPage() {
     const onEditSuccess = () => {
         showSuccessToast("Project updated successfully")
         fetchProject() // refreshing the project
+    }
+
+    const showCreateTask = () => {
+        const dialog = document.getElementById("create-task") as HTMLDialogElement || null
+        dialog?.showModal()
     }
 
 
@@ -72,13 +78,13 @@ export default function ProjectPage() {
                 <h4 className='text-xl font-semibold'>Tasks</h4>
 
                 <div className="tooltip  tooltip-top" data-tip="Add a task">
-                    <button className="btn btn-sm"><Plus size={20} /></button>
+                    <button onClick={showCreateTask} className="btn btn-sm"><Plus size={20} /></button>
                 </div>
 
             </div>
 
             <div>
-                {project.tasks.length === 0 && (
+                {project?.tasks?.length === 0 && (
                     <div className='flex justify-center items-center text-gray-400 min-h-56'>
                         There are no tasks in this project
                     </div>
@@ -86,6 +92,7 @@ export default function ProjectPage() {
             </div>
 
             <EditProject project={project} onEditSuccess={onEditSuccess} />
+            <CreateTask project={project} />
         </div >
     )
 }

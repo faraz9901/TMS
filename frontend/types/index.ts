@@ -6,7 +6,7 @@ export interface Project {
     createdAt: string;
     updatedAt: string;
     description: string;
-    tasks: string[];
+    tasks?: string[];
     status: STATUS
 }
 

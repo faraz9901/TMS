@@ -22,6 +22,8 @@ export default function ProjectPage() {
         setProject(data.content)
     }
 
+    console.log(project)
+
     React.useEffect(() => {
         fetchProject()
     }, [])
@@ -33,6 +35,11 @@ export default function ProjectPage() {
 
     const onEditSuccess = () => {
         showSuccessToast("Project updated successfully")
+        fetchProject() // refreshing the project
+    }
+
+    const onTaskCreationSuccess = () => {
+        showSuccessToast("Task created successfully")
         fetchProject() // refreshing the project
     }
 
@@ -84,15 +91,41 @@ export default function ProjectPage() {
             </div>
 
             <div>
-                {project?.tasks?.length === 0 && (
+
+                {/* if no tasks are there */}
+                {!project.tasks?.length &&
                     <div className='flex justify-center items-center text-gray-400 min-h-56'>
                         There are no tasks in this project
                     </div>
-                )}
+                }
+
+                {/* if tasks are there */}
+
+                {
+                    project?.tasks?.map((task) => <Task task={task} />)
+                }
+
+
             </div>
 
             <EditProject project={project} onEditSuccess={onEditSuccess} />
-            <CreateTask project={project} />
+            <CreateTask project={project} onSuccess={onTaskCreationSuccess} />
         </div >
+    )
+}
+
+
+const Task = ({ task }: { task: { task_name: string } }) => {
+    return (
+        <div className='flex justify-between items-center'>
+            <div className='flex gap-2 items-center'>
+                <p>{task.task_name}</p>
+            </div>
+
+            <div className="tooltip  tooltip-top" data-tip="Edit task">
+                <button className="btn btn-sm btn-primary"><Pencil size={20} /></button>
+            </div>
+
+        </div>
     )
 }

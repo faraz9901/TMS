@@ -6,8 +6,13 @@ export interface Project {
     createdAt: string;
     updatedAt: string;
     description: string;
-    tasks?: string[];
+    tasks?: Task[];
     status: STATUS
+}
+
+
+export interface Task {
+    task_name: string
 }
 
 export enum STATUS {

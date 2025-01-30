@@ -2,6 +2,8 @@ import React from 'react'
 import Input from '../Input'
 import { X } from 'lucide-react'
 import { Project } from '@/types'
+import { createTask } from '@/actions/task.service'
+import { getErrorMessage } from '@/utils'
 
 
 const initialValues = {
@@ -9,7 +11,7 @@ const initialValues = {
     description: "",
 }
 
-export default function CreateTask({ project }: { project: Project }) {
+export default function CreateTask({ project, onSuccess }: { project: Project, onSuccess: () => void }) {
 
     const [formStatus, setFormStatus] = React.useState("")
     const [taskData, setTaskData] = React.useState({ ...initialValues, project: project._id })
@@ -24,11 +26,24 @@ export default function CreateTask({ project }: { project: Project }) {
     const onClose = () => {
         const dialog = document.getElementById("create-task") as HTMLDialogElement || null
         dialog?.close()
+        setError("")
         setTaskData({ ...initialValues, project: project._id })
     }
 
     const onFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setFormStatus("loading")
+        const { error } = await createTask(taskData)
+
+        if (error) {
+            setFormStatus("")
+            setError(getErrorMessage(error))
+            return
+        }
+
+        setFormStatus("")
+        onClose()
+        onSuccess()
     }
 
     return (
@@ -46,7 +61,7 @@ export default function CreateTask({ project }: { project: Project }) {
                     <Input type="text" className='col-span-2' required name="task_name" disabled={formStatus === "loading"} onChange={handleFormData} value={taskData.task_name} />
 
                     <label> Description</label>
-                    <textarea required name="description" disabled={formStatus === "loading"} onChange={handleFormData} value={taskData.description} rows={5} className="textarea textarea-bordered col-span-2" placeholder='Explain briefly what is the purpose of the project' ></textarea>
+                    <textarea required name="description" disabled={formStatus === "loading"} onChange={handleFormData} value={taskData.description} rows={5} className="textarea textarea-bordered col-span-2" placeholder='Explain briefly what is the purpose of the task' ></textarea>
 
 
                     {error && <p className='col-span-3 text-red-500 text-center'>{error}</p>}

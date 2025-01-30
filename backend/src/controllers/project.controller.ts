@@ -89,12 +89,15 @@ export const getProject = asyncHandler(async (req: RequestWithUser, res: Respons
 
     const { id: projectId } = req.params
 
-    //getting the project with the given id 
-    const project = await Project.findOne({ _id: stringToObjectId(projectId) })
+    //getting the project with the given id and the tasks of the project
+    const [project] = await Project.aggregate([  // as aggreate returns an array always the first element is the document
+        { $match: { _id: stringToObjectId(projectId) } },
+        { $lookup: { from: "tasks", localField: "_id", foreignField: "project", as: "tasks" } },
+    ])
 
     if (!project) throw new ApiError(404, "Project not found")
 
-    return res.status(200).json(new ApiResponse(200, "Project fetched successfully", project))
+    return res.status(200).json(new ApiResponse(200, "Project fetched successfully", project)) // 
 })
 
 

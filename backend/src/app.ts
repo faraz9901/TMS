@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/user.routes";
 import projectRoutes from "./routes/project.routes";
+import taskRoutes from "./routes/task.routes";
 import ApiError from "./utils/ApiError";
 import { authorizeUser } from "./middlewares/authorizeUser";
 
@@ -20,6 +21,8 @@ app.use(cookieParser())
 app.use("/api/v1/user", userRoutes)
 
 app.use("/api/v1/projects", authorizeUser, projectRoutes)
+
+app.use("/api/v1/tasks", authorizeUser, taskRoutes)
 
 
 // Error handler

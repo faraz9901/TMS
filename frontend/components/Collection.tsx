@@ -1,12 +1,11 @@
 import { Project as ProjectType } from '@/types'
 import { Trash } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import React from 'react'
+import { Status } from './Status'
 
 const Project = ({ project }: { project: ProjectType }) => {
     const user_id = JSON.parse(localStorage.getItem("user") || "")._id
-    const router = useRouter()
 
     const onDelete = async (e: React.MouseEvent) => {
         e.preventDefault()
@@ -20,11 +19,14 @@ const Project = ({ project }: { project: ProjectType }) => {
             <h3 className='text-lg font-bold'>{project.project_name}</h3>
             <p className='text-sm text-gray-500'>{project.description}</p>
 
-            {project.owner === user_id && // showing the delete button if the project is created by the user
-                <div className='flex gap-2 justify-end'>
-                    <button onClick={onDelete} className=' btn-outline btn btn-sm btn-error' ><Trash size={15} /></button>
-                </div>
-            }
+            <div className='flex gap-2 justify-between items-center'>
+
+                <Status status={project.status} />
+
+                {/*  showing the delete button if the project is created by the user */}
+                {project.owner === user_id && <button onClick={onDelete} className=' btn-outline btn btn-sm btn-error' ><Trash size={15} /></button>}
+            </div>
+
         </Link>
     )
 }

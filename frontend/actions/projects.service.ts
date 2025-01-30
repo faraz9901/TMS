@@ -1,11 +1,10 @@
+import { STATUS } from "@/types";
 import { request } from "@/utils"
 
 interface Response {
     data: any;
     error: any
 }
-
-
 
 const getProjects = async () => {
     try {
@@ -53,4 +52,13 @@ const updateProject = async (id: string, data: { collection_name: string, projec
 }
 
 
-export { getProjects, createProject, deleteProject, getProject, updateProject }
+const updateProjectStatus = async (id: string, status: STATUS) => {
+    try {
+        await request.patch(`/projects/${id}`, { status })
+        return { error: null }
+    } catch (error) {
+        return { error }
+    }
+}
+
+export { getProjects, createProject, deleteProject, getProject, updateProject, updateProjectStatus }

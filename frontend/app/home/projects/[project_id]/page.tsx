@@ -1,6 +1,7 @@
 "use client"
 import { getProject } from '@/actions/projects.service'
 import EditProject from '@/components/EditProject'
+import { Status, StatusChanger } from '@/components/Status'
 import { Project } from '@/types'
 import { showErrorToast, showSuccessToast } from '@/utils'
 import { Pencil, Plus } from 'lucide-react'
@@ -46,16 +47,26 @@ export default function ProjectPage() {
         <div className='flex flex-col gap-5 p-5'>
 
             <div className='flex justify-between'>
-                <h2 className='text-2xl font-bold'>{project?.project_name}</h2>
+                <div className='flex items-center gap-4'>
+                    <h2 className='text-2xl font-bold'>
+                        {project?.project_name}
+                    </h2>
+
+                    <StatusChanger projectId={project?._id} initialStatus={project?.status} statusOf="Project" />
+                </div>
+
 
                 <div className="tooltip  tooltip-top" data-tip="Edit project">
                     <button onClick={showEditModal} className="btn btn-sm btn-primary"><Pencil size={20} /></button>
                 </div>
             </div>
 
+
             <p>
                 {project?.description}
             </p>
+
+
 
             <div className=' flex justify-between items-center'>
                 <h4 className='text-xl font-semibold'>Tasks</h4>

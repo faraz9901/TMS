@@ -1,7 +1,7 @@
 import { Response } from "express";
 import asyncHandler from "../utils/asyncHandler";
 import { RequestWithUser } from "../types";
-import { createProjectDto } from "../dto/project.dto";
+import { createProjectDto, statusDto } from "../dto/project.dto";
 import ApiError from "../utils/ApiError";
 import { Project } from "../models/Project.model";
 import ApiResponse from "../utils/ApiResponse";
@@ -88,7 +88,6 @@ export const updateProject = asyncHandler(async (req: RequestWithUser, res: Resp
 export const getProject = asyncHandler(async (req: RequestWithUser, res: Response) => {
 
     const { id: projectId } = req.params
-    const { _id: userId } = req.user
 
     //getting the project with the given id 
     const project = await Project.findOne({ _id: stringToObjectId(projectId) })
@@ -98,3 +97,28 @@ export const getProject = asyncHandler(async (req: RequestWithUser, res: Respons
     return res.status(200).json(new ApiResponse(200, "Project fetched successfully", project))
 })
 
+
+export const changeProjectStatus = asyncHandler(async (req: RequestWithUser, res: Response) => {
+
+    const projectId = req.params.id
+    const user_id = req.user._id
+
+    //checking if the project exists
+    const project = await Project.findOne({ _id: stringToObjectId(projectId), owner: stringToObjectId(user_id) })
+
+    if (!project) throw new ApiError(404, "Project not found")
+
+
+    const { status } = req.body
+
+    //checking if the status is valid
+    const result = statusDto.safeParse(status);
+
+    if (!result.success) throw new ApiError(400, result.error.issues[0].message);
+
+    //updating the project with the given id and owner
+    await Project.findOneAndUpdate({ _id: stringToObjectId(projectId), owner: stringToObjectId(user_id) }, { status })
+
+    return res.status(200).json(new ApiResponse(200, "Project updated successfully"))
+
+})

@@ -1,14 +1,6 @@
 import mongoose from "mongoose";
 import * as argon2d from "argon2";
-
-interface UserDocument extends mongoose.Document {
-    username: string;
-    email: string;
-    password: string;
-    isEmailVerified: boolean;
-    hashPassword(): Promise<void>;
-    comparePassword(password: string): Promise<boolean>;
-}
+import { UserDocument } from "../types";
 
 const userSchema: mongoose.Schema<UserDocument> = new mongoose.Schema({
     username: {

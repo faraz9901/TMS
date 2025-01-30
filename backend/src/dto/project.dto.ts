@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { STATUS } from "../types";
 
 const createProjectDto = z.object({
     collection_name: z.string({ required_error: "Collection name is required" }).regex(/^[a-zA-Z0-9_ ]+$/, { message: "Collection name can only contain alphabets, numbers and underscore" }),
@@ -6,5 +7,6 @@ const createProjectDto = z.object({
     description: z.string({ required_error: "Description is required" }),
 })
 
+const statusDto = z.nativeEnum(STATUS, { required_error: "Status is required", message: "Invalid status" })
 
-export { createProjectDto }
+export { createProjectDto, statusDto }

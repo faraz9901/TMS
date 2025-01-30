@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authorizeUser } from "../middlewares/authorizeUser";
-import { createProject, deleteProject, getProject, getUserOwnedProjects, updateProject } from "../controllers/project.controller";
+import { changeProjectStatus, createProject, deleteProject, getProject, getUserOwnedProjects, updateProject } from "../controllers/project.controller";
 
 
 const router = Router();
@@ -17,5 +17,6 @@ router
     .get(getProject)
     .delete(deleteProject)
     .put(updateProject)
+    .patch(changeProjectStatus)
 
 export default router

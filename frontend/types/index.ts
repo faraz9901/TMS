@@ -7,4 +7,11 @@ export interface Project {
     updatedAt: string;
     description: string;
     tasks: string[];
+    status: STATUS
+}
+
+export enum STATUS {
+    TODO = "TODO",
+    IN_PROGRESS = "IN PROGRESS",
+    DONE = "DONE"
 }

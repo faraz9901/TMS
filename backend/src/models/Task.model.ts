@@ -1,14 +1,5 @@
 import mongoose from "mongoose";
-
-interface TaskDocument extends mongoose.Document {
-    task_name: string;
-    description: string;
-    status: string;
-    priority: string;
-    due_date: Date;
-    createdAt: Date;
-    updatedAt: Date;
-}
+import { STATUS, TaskDocument } from "../types";
 
 const taskSchema: mongoose.Schema<TaskDocument> = new mongoose.Schema({
     task_name: {
@@ -19,17 +10,15 @@ const taskSchema: mongoose.Schema<TaskDocument> = new mongoose.Schema({
         type: String,
         required: true,
     },
+    project: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Project",
+        required: true
+    },
     status: {
         type: String,
         required: true,
-    },
-    priority: {
-        type: String,
-        required: true,
-    },
-    due_date: {
-        type: Date,
-        required: true,
+        enum: [STATUS.TODO, STATUS.IN_PROGRESS, STATUS.DONE],
     },
 }, { timestamps: true });
 

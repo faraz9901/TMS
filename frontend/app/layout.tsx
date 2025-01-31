@@ -18,6 +18,8 @@ export default function RootLayout({
         {children}
         <ToastContainer
           position="bottom-right"
+          pauseOnHover={false}
+          pauseOnFocusLoss={false}
         />
       </body>
     </html>

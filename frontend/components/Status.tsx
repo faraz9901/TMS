@@ -38,7 +38,6 @@ export function StatusChanger({ projectId, initialStatus, statusOf }: { projectI
     const [loading, setLoading] = React.useState(false)
     const possibleStatus = [STATUS.TODO, STATUS.IN_PROGRESS, STATUS.DONE]
 
-
     const handleStatusChange = async (changedStatus: STATUS) => {
         setLoading(true)
         setIsDropDownOpen(false)

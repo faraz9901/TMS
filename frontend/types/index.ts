@@ -12,7 +12,11 @@ export interface Project {
 
 
 export interface Task {
+    _id: string
     task_name: string
+    project: Project | string
+    status: STATUS
+    description: string
 }
 
 export enum STATUS {

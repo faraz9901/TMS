@@ -41,7 +41,7 @@ export default function CreateProject() {
         }
 
         router.push("/home")
-        showSuccessToast("Project created successfully")
+        showSuccessToast("Project created")
 
     }
 

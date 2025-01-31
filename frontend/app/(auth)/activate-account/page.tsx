@@ -19,7 +19,7 @@ export default function page() {
 
         if (error) return showErrorToast(error)
 
-        showSuccessToast("Email sent successfully")
+        showSuccessToast("Email sent ! Please check your email")
 
         return router.push("/login")
     }

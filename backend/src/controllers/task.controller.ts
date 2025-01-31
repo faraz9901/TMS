@@ -55,31 +55,6 @@ export const deleteTask = asyncHandler(async (req: RequestWithUser, res: Respons
 })
 
 
-export const updateTask = asyncHandler(async (req: RequestWithUser, res: Response) => {
-
-    const { task_id, project_id } = req.params
-
-    //validate the data send by the user
-    const result = createTaskDto.safeParse(req.body);
-
-    if (!result.success) throw new ApiError(400, result.error.issues[0].message);
-
-    // Checking if the task exists
-    const task: TaskDocument | null = await Task.findOne({ _id: stringToObjectId(task_id), project: stringToObjectId(project_id) }).populate("project")
-
-    if (!task) throw new ApiError(404, "Task not found")
-
-    const project = task.project as ProjectDocument
-
-    //checking if the user is the owner of the project
-    if (project.owner?.toString() !== req.user._id) throw new ApiError(403, "You are not authorized to update this task")
-
-    //  Updating the task with the given id
-    await Task.findOneAndUpdate({ _id: stringToObjectId(task_id) }, req.body)
-
-    return res.status(200).json(new ApiResponse(200, "Task updated successfully"))
-})
-
 export const getTask = asyncHandler(async (req: RequestWithUser, res: Response) => {
 
     const { task_id, project_id } = req.params

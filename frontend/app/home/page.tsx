@@ -5,7 +5,7 @@ import ConfirmDialog from '@/components/ConfirmDialog'
 import Loader from '@/components/Loader'
 import { Project } from '@/types'
 import { showErrorToast, showSuccessToast } from '@/utils'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import React from 'react'
 
 interface CollectionType {
@@ -17,7 +17,6 @@ export default function Collections() {
     const [collections, setCollections] = React.useState([])
     const [loading, setLoading] = React.useState("")
     const searchParams = useSearchParams()
-    const router = useRouter()
 
     const handleDeleteProject = async () => {
 
@@ -33,7 +32,7 @@ export default function Collections() {
 
         if (error) return showErrorToast(error)
 
-        showSuccessToast("Project deleted successfully")
+        showSuccessToast("Project deleted")
 
         removeQueryFromUrl()
 

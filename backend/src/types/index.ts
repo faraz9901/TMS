@@ -31,6 +31,12 @@ export interface TaskDocument extends mongoose.Document {
     updatedAt: Date;
 }
 
+export interface CommentDocument extends mongoose.Document {
+    task: mongoose.Schema.Types.ObjectId | TaskDocument;
+    posted_by: mongoose.Schema.Types.ObjectId | UserDocument;
+    message: string;
+}
+
 
 export interface UserDocument extends mongoose.Document {
     username: string;

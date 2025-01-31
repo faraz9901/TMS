@@ -1,22 +1,19 @@
 import { Router } from "express";
-import { authorizeUser } from "../middlewares/authorizeUser";
 import { changeProjectStatus, createProject, deleteProject, getProject, getUserOwnedProjects, updateProject } from "../controllers/project.controller";
 
 
 const router = Router();
 
-// Post route for creating a project 
-// Get route for getting all the projects
 router
     .route("/")
-    .post(createProject)
-    .get(getUserOwnedProjects)
+    .post(createProject) //create the project
+    .get(getUserOwnedProjects)  // to get all the projects owned by the user as collections array
 
 router
     .route("/:id") // route
-    .get(getProject)
-    .delete(deleteProject)
-    .put(updateProject)
-    .patch(changeProjectStatus)
+    .get(getProject) // to get the project with their tasks
+    .delete(deleteProject) // to delete the project
+    .put(updateProject) // to update the project
+    .patch(changeProjectStatus) // to change the status of the project
 
 export default router

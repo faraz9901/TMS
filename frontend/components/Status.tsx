@@ -1,5 +1,6 @@
 "use client"
 import { updateProjectStatus } from '@/actions/projects.service'
+import { updateTaskStatus } from '@/actions/task.service'
 import { STATUS } from '@/types'
 import { ChevronDown } from 'lucide-react'
 import React from 'react'
@@ -31,7 +32,7 @@ export function Status({ status }: { status: STATUS }) {
 }
 
 
-export function StatusChanger({ projectId, initialStatus, statusOf }: { projectId: string, initialStatus: STATUS, statusOf: "Task" | "Project" }) {
+export function StatusChanger({ projectId, initialStatus, statusOf, taskId }: { projectId: string, initialStatus: STATUS, statusOf: "Task" | "Project", taskId?: string }) {
 
     const [status, setStatus] = React.useState<STATUS>(initialStatus)
     const [isDropDownOpen, setIsDropDownOpen] = React.useState(false)
@@ -42,7 +43,12 @@ export function StatusChanger({ projectId, initialStatus, statusOf }: { projectI
         setLoading(true)
         setIsDropDownOpen(false)
 
-        if (statusOf === "Task") { }
+        if (statusOf === "Task" && taskId) {
+
+            const { error } = await updateTaskStatus(projectId, taskId, changedStatus)
+
+            if (!error) setStatus(changedStatus) // if there is no error then update the status
+        }
 
         if (statusOf === "Project") {
 

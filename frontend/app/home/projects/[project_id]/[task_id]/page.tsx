@@ -1,5 +1,6 @@
 "use client"
 import { getTask } from '@/actions/task.service'
+import Comments from '@/components/Comments'
 import Loader from '@/components/Loader'
 import { StatusChanger } from '@/components/Status'
 import { Project, Task } from '@/types'
@@ -44,12 +45,14 @@ export default function ShowTask() {
 
                 <div className='flex gap-10 items-end'>
                     <h3 className='text-2xl font-bold'>{task.task_name}</h3>
-                    <StatusChanger initialStatus={task.status} projectId={project._id} statusOf="Task" />
+                    <StatusChanger initialStatus={task.status} taskId={task._id} projectId={project._id} statusOf="Task" />
                 </div>
 
                 <p>
                     {task.description}
                 </p>
+
+                <Comments taskId={task._id} />
             </div>
         </div>
     )

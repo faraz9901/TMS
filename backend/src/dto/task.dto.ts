@@ -6,4 +6,9 @@ const createTaskDto = z.object({
     project: z.string({ required_error: "Project is required" }),
 })
 
-export { createTaskDto }
+
+const commentDto = z.object({
+    message: z.string({ required_error: "Comment is required" }),
+})
+
+export { createTaskDto, commentDto }

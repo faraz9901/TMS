@@ -1,7 +1,7 @@
 import React from 'react'
 import Loader from './Loader'
-import { getAllComments } from '@/actions/task.service'
-import { showErrorToast } from '@/utils'
+import { createComment, getAllComments } from '@/actions/task.service'
+import { showErrorToast, timePassed } from '@/utils'
 import { Plus, SendHorizontal } from 'lucide-react'
 import Input from './Input'
 
@@ -28,10 +28,19 @@ export default function Comments({ taskId }: { taskId: string }) {
         e.preventDefault()
         setLoading("sending")
 
-        setTimeout(() => {
-            setLoading("")
+
+        const { error } = await createComment({ task_id: taskId, message: comment })
+
+        if (error) {
+            showErrorToast(error)
+        } else {
+            setComment("") // reset the value
             setShowAddComment(false) // close the add comment form
-        }, 4000)
+            fetchComments() // reload the comments
+        }
+
+        setLoading("")
+
     }
 
     React.useEffect(() => {
@@ -71,12 +80,12 @@ export default function Comments({ taskId }: { taskId: string }) {
 
             <ul className='flex flex-col gap-4'>
                 {comments.map((comment: any) => (
-                    <li key={comment._id} className='flex flex-col gap-2 items-start'>
+                    <li key={comment._id} className='flex flex-col gap-2 border-b pb-4  border-b-gray-200 items-start'>
                         <div className='flex gap-2 items-center'>
                             <span className=' font-bold'>{comment.posted_by?.username}</span>
-                            <span className=' text-gray-400'>{comment.createdAt}</span>
+                            <span className='text-xs text-gray-400'>{timePassed(new Date(comment.createdAt))}</span>
                         </div>
-                        <p className=''>{comment.message}</p>
+                        <p className='text-sm'>{comment.message}</p>
                     </li>
                 ))}
             </ul>

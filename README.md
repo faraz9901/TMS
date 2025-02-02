@@ -1,16 +1,13 @@
 # Task Management System (TMS)
 
-This project is a Task Management System (TMS) built using [mention the technologies used, e.g., React for the frontend, Node.js with Express for the backend, and MongoDB for the database].  It allows users to create, manage, and track tasks efficiently.
+This project is a Task Management System (TMS) built using Next JS for frontend and Express JS and MongoDB for backend.  It allows users to create, manage, and track tasks efficiently.
 
 ## Table of Contents
 
 - [Features](#features)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Technologies Used](#technologies-used)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+
+
 
 ## Features
 

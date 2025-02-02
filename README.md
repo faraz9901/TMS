@@ -7,7 +7,7 @@ This project is a Task Management System (TMS) built using Next JS for frontend 
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#Usage)
-- [Technologies Used](#TechnologiesUsed)
+- [Technologies](#technologies)
 
 
 
@@ -96,7 +96,7 @@ This project is a Task Management System (TMS) built using Next JS for frontend 
 ### Search:
 - Use the search bar (if implemented) to find tasks by keywords.
 
-## Technologies Used
+## Technologies
 - **Frontend:** Next.js, React, HTML, CSS, JavaScript, Tailwind, Axios
 - **Backend:** Node.js, Express, 
 - **Database:** MongoDB

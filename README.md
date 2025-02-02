@@ -7,7 +7,7 @@ This project is a Task Management System (TMS) built using Next JS for frontend 
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#Usage)
-- [Technologies Used](#Technologies Used)
+- [Technologies Used](#TechnologiesUsed)
 
 
 

@@ -34,11 +34,24 @@ export const createProject = asyncHandler(async (req: RequestWithUser, res: Resp
 
 export const getUserOwnedProjects = asyncHandler(async (req: RequestWithUser, res: Response) => {
 
-    //getting all the projects of the user and grouping them based on the collections
+
+    const query: any = {
+        owner: stringToObjectId(req.user._id)  //  base query to get all the projects of the user
+    }
+
+    // checking if the user is sending some query parameters to search for projects
+    const search = req.query?.search?.toString()?.trim() || ""
+
+    if (search) { // checking if search is not empty
+        const searchregex = new RegExp(search, "i") // i means case insensitive
+        query.$or = [{ project_name: searchregex }, { collection_name: searchregex }] // adding the search query to the base query 
+    }
+
+    //getting all the projects of the user and grouping them based on the collections 
     const collections = await Project.aggregate([
-        { $match: { owner: stringToObjectId(req.user._id) } },
-        { $group: { _id: "$collection_name", projects: { $push: "$$ROOT" } } },
-        { $project: { _id: 0, name: "$_id", projects: 1 } },
+        { $match: query },  // matching the query
+        { $group: { _id: "$collection_name", projects: { $push: "$$ROOT" } } },  // grouping the projects based on the collections
+        { $project: { _id: 0, name: "$_id", projects: 1 } }, // projecting the collection name as name and  projects as projects
         { $sort: { name: 1 } } // sorting the collections in alphabetical order
     ]);
 

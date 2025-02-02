@@ -6,9 +6,9 @@ interface Response {
     error: any
 }
 
-const getProjects = async () => {
+const getProjects = async (search = "") => {
     try {
-        const res = await request.get("/projects")
+        const res = await request.get("/projects", { params: { search } })
         return { data: res.data, error: null }
     } catch (error) {
         return { data: null, error }

@@ -17,6 +17,7 @@ export default function Collections() {
     const [collections, setCollections] = React.useState([])
     const [loading, setLoading] = React.useState("")
     const searchParams = useSearchParams()
+    const search = searchParams.get("search") || ""  // getting the search query
 
     const handleDeleteProject = async () => {
 
@@ -46,10 +47,11 @@ export default function Collections() {
 
     const getCollections = async () => {
         setLoading("loading")
-        const { data, error } = await getProjects()
+        const { data, error } = await getProjects(search)
 
         if (data) {
             setCollections(data.content)
+
         }
 
         if (error) {
@@ -61,7 +63,7 @@ export default function Collections() {
 
     React.useEffect(() => {
         getCollections()
-    }, [])
+    }, [search])
 
     if (loading) return <Loader />
 

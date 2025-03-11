@@ -16,7 +16,7 @@ This project is a Task Management System (TMS) built using Next JS for frontend 
 
 - **Task Creation:** Users can create new tasks with descriptions, due dates, priorities, and assigned users.
 - **Task Management:**  Tasks can be viewed, edited, marked as complete, and deleted.
-- **User Management:** [Describe user features, e.g., User registration, login, roles (admin, regular user), etc.]
+- **User Management:** 
 - **Search:**  Users can search for tasks based on keywords in the description.
 
 ## Installation
@@ -27,7 +27,7 @@ This project is a Task Management System (TMS) built using Next JS for frontend 
    cd TMS
 
 ### Backend Setup:
-1. Navigate to the backend directory (if separate):
+1. Navigate to the backend directory:
    ```
    cd backend
    ```
@@ -40,8 +40,7 @@ This project is a Task Management System (TMS) built using Next JS for frontend 
    DATABASE_URL=mongodb://localhost:27017/tms
    PORT=5000
    JWT_SECRET=your_secret_key
-   SENDGRID_API_KEY=your_sendgrid_api_key
-   ```
+    ```
 4. Start the backend server:
    ```
    npm start
@@ -68,7 +67,7 @@ This project is a Task Management System (TMS) built using Next JS for frontend 
 ### Database Setup (Example for MongoDB):
 1. Install MongoDB (if you haven't already).
 2. Start the MongoDB server.
-3. Create the database named `tms` (or whatever you configured in your backend `.env` file). You can use MongoDB Compass or the command line. You might not need to create collections manually if your backend uses an ORM/ODM like Mongoose, as it will often create them for you.
+3. Create the database named `tms`. You can use MongoDB Compass or the command line. You might not need to create collections manually if your backend uses an ORM/ODM like Mongoose, as it will often create them for you.
 
 ## Usage
 
